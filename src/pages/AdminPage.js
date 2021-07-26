@@ -1,5 +1,5 @@
 import React from 'react'
-import ProductList from '../components/admin/ProductList'
+import ProductList from '../components/admin/AdminProductList'
 
 export default function AdminPage() {
     return (

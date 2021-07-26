@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { isEmail } from "validator";
 
-import "../assets/Login.css";
+import "./assets/Login.css";
 
 const required = (value) => {
   if (!value) {

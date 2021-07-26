@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Link, useHistory } from "react-router-dom";
 import axios from 'axios';
 
-import "../assets/Login.css";
+import "./assets/Login.css";
 
 export default function Login() {
 

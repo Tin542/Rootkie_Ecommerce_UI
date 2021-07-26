@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./assets/Navbar.css";
+import "../assets/Navbar.css";
 
 export default class Navbar extends Component {
   render() {

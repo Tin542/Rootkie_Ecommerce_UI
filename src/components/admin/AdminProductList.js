@@ -33,7 +33,7 @@ export default class ProductList extends Component {
       Authorization: localStorage.getItem("auth"),
     };
     axios
-      .get(`http://localhost:9999/BookStore/home/book?page=${page}`, {
+      .get(`http://localhost:9999/BookStore/admin/book?page=${page}`, {
         headers,
       })
       .then((response) => {
@@ -77,7 +77,7 @@ export default class ProductList extends Component {
       Authorization: localStorage.getItem("auth"),
     };
     axios
-      .get(`http://localhost:9999/BookStore/home/search-book?keyword=${this.state.searchValue}`, {
+      .get(`http://localhost:9999/BookStore/admin/search-book?keyword=${this.state.searchValue}`, {
         headers,
       })
       .then((response) => {
@@ -116,7 +116,7 @@ export default class ProductList extends Component {
       Authorization: localStorage.getItem("auth"),
     };
     axios
-      .get(`http://localhost:9999/BookStore/home/search-book?page=${page}`, {
+      .get(`http://localhost:9999/BookStore/admin/search-book?page=${page}`, {
         headers,
       })
       .then((response) => {
