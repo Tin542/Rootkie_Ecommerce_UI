@@ -20,11 +20,12 @@ export default class ProductList extends Component {
 
       _categories: [],
 
-      searchByCateValue:"",
-      searchByCatePageList:[],
+      searchByCateValue: "",
+      category_ID: "",
+      searchByCatePageList: [],
       isSearchByCate: false,
 
-      page: 0,
+      page: 1,
     };
   }
 
@@ -118,9 +119,10 @@ export default class ProductList extends Component {
           this.setState({
             loading: true,
             isSearch: true,
+            isSearchByCate: false,
             _products: response.data.data.Books,
           });
-          this.showPageList(response.data);
+          this.showSearchPageList(response.data);
         }
       })
       .catch((err) => {
@@ -147,9 +149,12 @@ export default class ProductList extends Component {
       Authorization: localStorage.getItem("auth"),
     };
     axios
-      .get(`http://localhost:9999/BookStore/home/search-book?page=${page}`, {
-        headers,
-      })
+      .get(
+        `http://localhost:9999/BookStore/home/search-book?keyword=${this.state.searchValue}&page=${page}`,
+        {
+          headers,
+        }
+      )
       .then((response) => {
         if (response.status === 200) {
           this.setState({
@@ -168,12 +173,94 @@ export default class ProductList extends Component {
       });
   }
 
-  searchByCategory = (e) => {
+  searchByCategory(cateID, cateName) {
+    this.setState({ category_ID: cateID, searchByCateValue: cateName });
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("auth"),
+    };
+    console.log(cateID);
+    axios
+      .get(
+        `http://localhost:9999/BookStore/home/search-book?keyword=${cateID}`,
+        {
+          headers,
+        }
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          this.setState({
+            loading: true,
+            isSearchByCate: true,
+            isSearch: false,
+            _products: response.data.data.Books,
+          });
+          this.showSearchCatePageList(response.data);
+        }
+      })
+      .catch((err) => {
+        if (err.response) {
+          if (err.response.data.errorCode !== null) {
+            alert("Book not found !");
+          }
+        }
+      });
+  }
 
+  showSearchCatePageList(response) {
+    var list = [];
+    for (let i = 0; i < response.data.totalPages; i++) {
+      list.push(i);
+    }
+    if (list.length > 1) {
+      this.setState({ searchByCatePageList: list });
+      console.log("list search by cate page: " + list);
+    }
+  }
+
+  changeSearchPageByCate(page) {
+    this.setState({ page: page });
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("auth"),
+    };
+    console.log(page);
+    axios
+      .get(
+        `http://localhost:9999/BookStore/home/search-book?keyword=${this.state.category_ID}&page=${page}`,
+        {
+          headers,
+        }
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          this.setState({
+            loading: true,
+            isSearchByCate: true,
+            isSearch: false,
+            _products: response.data.data.Books,
+          });
+          this.showSearchCatePageList(response.data);
+        }
+      })
+      .catch((err) => {
+        if (err.response) {
+          if (err.response.data.errorCode !== null) {
+            alert("Book not found !");
+          }
+        }
+      });
   }
 
   render() {
-    const { loading, _products, pageList, searchPageList, _categories } = this.state;
+    const {
+      loading,
+      _products,
+      pageList,
+      searchPageList,
+      _categories,
+      searchByCatePageList,
+    } = this.state;
 
     if (!loading) {
       return <h1>loading...</h1>;
@@ -202,12 +289,22 @@ export default class ProductList extends Component {
           </div>
           <hr />
           <details open>
-            <summary>Category</summary>
+            <summary>
+              Category: {this.state.searchByCateValue !== "" && <a>{this.state.searchByCateValue}</a>}
+
+            </summary>
             <ul>
-              {_categories.map((category) => (
-                <li key={category.categoryID}>
-                  <a>{category.categoryName}</a>
-                  </li>
+              {_categories.map((category, index) => (
+                <li
+                  key={index}
+                  onClick={() =>
+                    this.searchByCategory(
+                      `${category.categoryID}`,
+                      `${category.categoryName}`
+                    )
+                  }>
+                  <a href="#">{category.categoryName}</a>
+                </li>
               ))}
             </ul>
           </details>
@@ -260,6 +357,7 @@ export default class ProductList extends Component {
           <div className="center">
             <div class="pagination">
               {this.state.isSearch === false &&
+                this.state.isSearchByCate === false &&
                 pageList.map((page, index) => (
                   <a key={index} onClick={() => this.getData(page)}>
                     {page + 1}
@@ -268,6 +366,14 @@ export default class ProductList extends Component {
               {this.state.isSearch === true &&
                 searchPageList.map((page, index) => (
                   <a key={index} onClick={() => this.changeSearchPage(page)}>
+                    {page + 1}
+                  </a>
+                ))}
+              {this.state.isSearchByCate === true &&
+                searchByCatePageList.map((page, index) => (
+                  <a
+                    key={index}
+                    onClick={() => this.changeSearchPageByCate(page)}>
                     {page + 1}
                   </a>
                 ))}

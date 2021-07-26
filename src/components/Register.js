@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { isEmail } from "validator";
+import Form from "react-validation/build/form";
+import Input from "react-validation/build/input";
+
 import Navbar from './Navbar';
 
 import "./assets/Login.css";
@@ -147,7 +150,10 @@ export default class Register extends Component {
         console.log(response);
       }
   })
-  .catch(err => alert(err.response.data.message));
+  .catch((err) => {
+    console.log(err);
+    alert("Register Failure!");
+  });
     return Account;
   }
 
@@ -155,13 +161,13 @@ export default class Register extends Component {
     return (
       <>
       <Navbar/>
-      <form class="login">
+      <Form class="login">
         <div class="login-screen">
           <div class="app-title">
             <h1>Register</h1>
           </div>
           <div class="control-group">
-            <input
+            <Input
               type="text"
               placeholder="Enter username"
               name="username"
@@ -174,7 +180,7 @@ export default class Register extends Component {
             <label class="login-field-icon fui-user" for="login-name"></label>
           </div>
           <div class="control-group">
-            <input
+            <Input
               type="text"
               placeholder="Enter Fullname"
               name="fullname"
@@ -187,7 +193,7 @@ export default class Register extends Component {
             <label class="login-field-icon fui-user" for="full-name"></label>
           </div>
           <div class="control-group">
-            <input
+            <Input
               type="text"
               placeholder="Enter Email"
               name="email"
@@ -200,7 +206,7 @@ export default class Register extends Component {
             <label class="login-field-icon fui-user" for="reg-email"></label>
           </div>
           <div class="control-group">
-            <input
+            <Input
               type="password"
               placeholder="Enter Password"
               name="password"
@@ -213,7 +219,7 @@ export default class Register extends Component {
             <label class="login-field-icon fui-user" for="reg-pass"></label>
           </div>
           <div class="control-group">
-            <input
+            <Input
               type="text"
               placeholder="Enter phone"
               name="phone"
@@ -226,7 +232,7 @@ export default class Register extends Component {
             <label class="login-field-icon fui-user" for="reg-phone"></label>
           </div>
           <div class="control-group">
-            <input
+            <Input
               type="text"
               placeholder="Enter address"
               name="address"
@@ -238,7 +244,7 @@ export default class Register extends Component {
             />
             <label class="login-field-icon fui-user" for="reg-address"></label>
           </div>
-          <input
+          <Input
             class="btn btn-primary"
             onClick={this.createAccount}
             type="submit"
@@ -246,7 +252,7 @@ export default class Register extends Component {
           />
           Already have an account ? <Link to="/login">Login</Link>
         </div>
-      </form>
+      </Form>
       </>
     );
   }
