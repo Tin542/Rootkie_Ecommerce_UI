@@ -102,3 +102,30 @@ body{
   margin-left: 0;
   margin-right: 16px;
 }
+
+details {
+  background: rgb(235, 87, 82);
+  color: #ddd;
+  width: 300px;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  float: right;
+}
+summary {
+  padding: 10px;
+}
+summary:focus {
+  outline: none;
+}
+details ul {
+  background: #ddd;
+  margin: 0;
+  color: black;
+  padding: 10px;
+  border-radius: 0 0 4px 4px;
+}
+
+details li {
+  margin-left: 30px;
+  margin-top: 10px;
+}

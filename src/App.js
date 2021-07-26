@@ -19,6 +19,7 @@ function App() {
           <Route path='/login' exact component={Login} />
           <Route path='/register' exact component={Register} />
           <Route path='/admin' exact component={Admin} />
+          <Route path='/product' exact component={Admin} />
           <Route path='/category' exact component={Category} />
         </Switch>
       </Router>

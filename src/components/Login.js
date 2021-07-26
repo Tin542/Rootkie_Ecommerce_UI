@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { Link, useHistory } from "react-router-dom";
 import axios from 'axios';
+import Navbar from './Navbar'
 
 import "./assets/Login.css";
 
@@ -45,6 +46,8 @@ export default function Login() {
     }
 
     return (
+     <>
+     <Navbar/>
         <form class="login">
         <div class="login-screen">
           <div class="app-title">
@@ -79,5 +82,6 @@ export default function Login() {
           
         </div>
       </form>
+      </>
     )
 }

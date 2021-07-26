@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { isEmail } from "validator";
+import Navbar from './Navbar';
 
 import "./assets/Login.css";
 
@@ -153,6 +154,7 @@ export default class Register extends Component {
   render() {
     return (
       <>
+      <Navbar/>
       <form class="login">
         <div class="login-screen">
           <div class="app-title">

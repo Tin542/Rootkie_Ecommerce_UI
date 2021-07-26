@@ -1,4 +1,3 @@
-
 import React, { Component } from "react";
 import Rating from "@material-ui/lab/Rating";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,12 +18,41 @@ export default class ProductList extends Component {
       searchPageList: [],
       isSearch: false,
 
+      _categories: [],
+
       page: 0,
     };
   }
 
   componentDidMount() {
     this.getData(this.state.page);
+    this.getCategory();
+  }
+
+  getCategory() {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("auth"),
+    };
+    axios
+      .get(`http://localhost:9999/BookStore/home/category`, {
+        headers,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          this.setState({
+            loading: true,
+            _categories: response.data.data,
+          });
+        }
+      })
+      .catch((err) => {
+        if (err.response) {
+          if (err.response.data.errorCode !== null) {
+            alert(err.response.data.errorCode);
+          }
+        }
+      });
   }
 
   getData(page) {
@@ -53,7 +81,6 @@ export default class ProductList extends Component {
         }
       });
   }
-
   showPageList(response) {
     var list = [];
     for (let i = 0; i < response.data.totalPages; i++) {
@@ -77,9 +104,12 @@ export default class ProductList extends Component {
       Authorization: localStorage.getItem("auth"),
     };
     axios
-      .get(`http://localhost:9999/BookStore/admin/search-book?keyword=${this.state.searchValue}`, {
-        headers,
-      })
+      .get(
+        `http://localhost:9999/BookStore/admin/search-book?keyword=${this.state.searchValue}`,
+        {
+          headers,
+        }
+      )
       .then((response) => {
         if (response.status === 200) {
           this.setState({
@@ -138,7 +168,7 @@ export default class ProductList extends Component {
   }
 
   render() {
-    const { loading, _products, pageList, searchPageList } = this.state;
+    const { loading, _products, pageList, searchPageList, _categories } = this.state;
 
     if (!loading) {
       return <h1>loading...</h1>;
@@ -165,8 +195,16 @@ export default class ProductList extends Component {
               </li>
             </button>
           </div>
+          <hr />
+          <details open>
+            <summary>Category</summary>
+            <ul>
+              {_categories.map((category) => (
+                <li key={category.categoryID}><a>{category.categoryName}</a></li>
+              ))}
+            </ul>
+          </details>
         </div>
-
         <div className="container">
           <div className="row">
             <div className="col-md-8">
@@ -178,7 +216,7 @@ export default class ProductList extends Component {
                     <th>Descripton</th>
                     <th>Price</th>
                     <th>rate</th>
-                    <th>Add To Cart</th>
+                    <th>Cart</th>
                   </tr>
                 </thead>
                 <tbody>
