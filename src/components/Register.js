@@ -126,22 +126,33 @@ export default class Register extends Component {
       address: e.target.value,
     });
   }
-  createAccount() {
+  createAccount(e) {
+    e.preventDefault();
     var Account = {
+      username: this.state.username,
+      fullname: this.state.fullname,
+      email: this.state.email,
       password: this.state.password,
       address: this.state.address,
       phone: this.state.phone,
-      fullname: this.state.fullname,
-      email: this.state.email,
-      username: this.state.username,
     };
     console.log(Account);
-    axios.post("http://localhost:9999/BookStore/auth/signup", Account);
-    console.log();
+    axios.post("http://localhost:9999/BookStore/auth/signup", Account)
+    .then(response => {
+      if (response.status === 200) {
+          console.log(response);
+          alert("Register Success!");
+      }else{
+        console.log(response);
+      }
+  })
+  .catch(err => alert(err.response.data.message));
     return Account;
   }
+
   render() {
     return (
+      <>
       <form class="login">
         <div class="login-screen">
           <div class="app-title">
@@ -234,6 +245,7 @@ export default class Register extends Component {
           Already have an account ? <Link to="/login">Login</Link>
         </div>
       </form>
+      </>
     );
   }
 }
