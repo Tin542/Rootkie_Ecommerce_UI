@@ -201,7 +201,7 @@ export default class ProductList extends Component {
       .catch((err) => {
         if (err.response) {
           if (err.response.data.errorCode !== null) {
-            alert("Book not found !");
+            alert("No Book exist in category !");
           }
         }
       });
@@ -212,7 +212,7 @@ export default class ProductList extends Component {
     for (let i = 0; i < response.data.totalPages; i++) {
       list.push(i);
     }
-    if (list.length > 1) {
+    if (list.length > 0) {
       this.setState({ searchByCatePageList: list });
       console.log("list search by cate page: " + list);
     }
@@ -290,8 +290,10 @@ export default class ProductList extends Component {
           <hr />
           <details open>
             <summary>
-              Category: {this.state.searchByCateValue !== "" && <a>{this.state.searchByCateValue}</a>}
-
+              Category:{" "}
+              {this.state.searchByCateValue !== "" && (
+                <a>{this.state.searchByCateValue}</a>
+              )}
             </summary>
             <ul>
               {_categories.map((category, index) => (
