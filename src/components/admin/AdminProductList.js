@@ -1,7 +1,11 @@
-import React, { Component } from 'react'
-import axios from "axios"
+import React, { Component } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
-export default class AdminProductList extends Component {
+import "../assets/AdminProductList.css";
+
+export default class ProductList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -60,7 +64,7 @@ export default class AdminProductList extends Component {
       Authorization: localStorage.getItem("auth"),
     };
     axios
-      .get(`http://localhost:9999/BookStore/home/book`, {
+      .get(`http://localhost:9999/BookStore/admin/book`, {
         headers,
       })
       .then((response) => {
@@ -97,7 +101,7 @@ export default class AdminProductList extends Component {
       Authorization: localStorage.getItem("auth"),
     };
     axios
-      .get(`http://localhost:9999/BookStore/home/book?page=${page}`, {
+      .get(`http://localhost:9999/BookStore/admin/book?page=${page}`, {
         headers,
       })
       .then((response) => {
@@ -131,7 +135,7 @@ export default class AdminProductList extends Component {
     };
     axios
       .get(
-        `http://localhost:9999/BookStore/home/search-book?keyword=${this.state.searchValue}`,
+        `http://localhost:9999/BookStore/admin/search-book?keyword=${this.state.searchValue}`,
         {
           headers,
         }
@@ -172,7 +176,7 @@ export default class AdminProductList extends Component {
     };
     axios
       .get(
-        `http://localhost:9999/BookStore/home/search-book?keyword=${this.state.searchValue}&page=${page}`,
+        `http://localhost:9999/BookStore/admin/search-book?keyword=${this.state.searchValue}&page=${page}`,
         {
           headers,
         }
@@ -204,7 +208,7 @@ export default class AdminProductList extends Component {
     console.log(cateID);
     axios
       .get(
-        `http://localhost:9999/BookStore/home/search-book?keyword=${cateID}`,
+        `http://localhost:9999/BookStore/admin/search-book?keyword=${cateID}`,
         {
           headers,
         }
@@ -249,7 +253,7 @@ export default class AdminProductList extends Component {
     console.log(page);
     axios
       .get(
-        `http://localhost:9999/BookStore/home/search-book?keyword=${this.state.category_ID}&page=${page}`,
+        `http://localhost:9999/BookStore/admin/search-book?keyword=${this.state.category_ID}&page=${page}`,
         {
           headers,
         }
@@ -273,12 +277,154 @@ export default class AdminProductList extends Component {
         }
       });
   }
+
   render() {
+    const {
+      loading,
+      _products,
+      pageList,
+      searchPageList,
+      _categories,
+      searchByCatePageList,
+    } = this.state;
+
+    if (!loading) {
+      return <h1>loading...</h1>;
+    }
     return (
-      <div>
-        Manage Product
-      </div>
-    )
+      <>
+      <div className="grid-container">
+        <div class="row" >
+          <div class="search">
+            <input
+              type="text"
+              class="searchTerm"
+              placeholder="What are you looking for?"
+              name="searchValue"
+              value={this.state.searchValue}
+              onChange={this.setParams}
+              id="searchValue"
+            />
+            <button
+              type="submit"
+              class="searchButton"
+              onClick={(e) => this.searchProduct(e)}>
+              <li>
+                <FontAwesomeIcon icon={faSearch} />
+              </li>
+            </button>
+          </div>
+          
+          <details open>
+            <summary>
+              Category:{" "}
+              {this.state.searchByCateValue !== "" && (
+                <a>{this.state.searchByCateValue}</a>
+              )}
+            </summary>
+            <ul>
+              {_categories.map((category, index) => (
+                <li
+                  key={index}
+                  onClick={() =>
+                    this.searchByCategory(
+                      `${category.categoryID}`,
+                      `${category.categoryName}`
+                    )
+                  }>
+                  <a href="#">{category.categoryName}</a>
+                </li>
+              ))}
+            </ul>
+          </details>
+          <button className="add_button">Add Book</button>
+        </div>
+        <div className="container">
+          <div className="row">
+            <div className="col-md-8">
+              <table className="table" style={{ width: "150%" }}>
+                <thead>
+                  <tr>
+                    <th>image</th>
+                    <th>Name</th>
+                    <th>Descripton</th>
+                    <th>Price</th>
+                    <th>Rate</th>
+                    <th>Category</th>
+                    <th>Author</th>
+                    <th>Publisher</th>
+                    <th>Publish year</th>
+                    <th>isDelete</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {_products.map((item) => (
+                    <tr key={item.id}>
+                      <td>
+                        <div className="product_image">
+                          <img
+                            src={item.image}
+                            alt="Book"
+                            style={{ width: "100%" }}
+                          />
+                        </div>
+                      </td>
+                      <td>{item.book_name}</td>
+                      <td>{item.bookDescription}</td>
+                      <td>{item.bookPrice} VND</td>
+                      <td>{item.rate}</td>
+                      <td>{item.categoryName}</td>
+                      <td>{item.author}</td>
+                      <td>{item.publisher}</td>
+                      <td>{item.publish_year}</td>
+                      <td>{item.delete ? "true" : "false"}</td>
+                      <td>
+                      <button
+                          style={{ color: "blue" }}
+                        >
+                          <FontAwesomeIcon icon={faEdit} />
+                        </button>
+                        <button
+                          style={{ color: "red" }}
+                          >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="center">
+            <div class="pagination">
+              {this.state.isSearch === false &&
+                this.state.isSearchByCate === false &&
+                pageList.map((page, index) => (
+                  <a key={index} onClick={() => this.changePage(page)}>
+                    {page + 1}
+                  </a>
+                ))}
+              {this.state.isSearch === true &&
+                searchPageList.map((page, index) => (
+                  <a key={index} onClick={() => this.changeSearchPage(page)}>
+                    {page + 1}
+                  </a>
+                ))}
+              {this.state.isSearchByCate === true &&
+                searchByCatePageList.map((page, index) => (
+                  <a
+                    key={index}
+                    onClick={() => this.changeSearchPageByCate(page)}>
+                    {page + 1}
+                  </a>
+                ))}
+            </div>
+          </div>
+        </div>
+        </div>
+      </>
+    );
   }
 }
-

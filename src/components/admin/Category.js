@@ -390,7 +390,7 @@ export default class Category extends Component {
                     <th>Name</th>
                     <th>Create Date</th>
                     <th>Update Date</th>
-                    <th>Delete</th>
+                    <th>Deleted</th>
                     <th>Action</th>
                   </tr>
                 </thead>
