@@ -25,12 +25,12 @@ export default class ProductList extends Component {
       searchByCatePageList: [],
       isSearchByCate: false,
 
-      page: 1,
+      page: 0,
     };
   }
 
   componentDidMount() {
-    this.getData(this.state.page);
+    this.getData();
     this.getCategory();
   }
 
@@ -59,13 +59,13 @@ export default class ProductList extends Component {
         }
       });
   }
-  getData(page) {
+  getData() {
     const headers = {
       "Content-Type": "application/json",
       Authorization: localStorage.getItem("auth"),
     };
     axios
-      .get(`http://localhost:9999/BookStore/home/book?page=${page}`, {
+      .get(`http://localhost:9999/BookStore/home/book`, {
         headers,
       })
       .then((response) => {
@@ -94,6 +94,33 @@ export default class ProductList extends Component {
       this.setState({ pageList: list });
       console.log("list page: " + list);
     }
+  }
+  changePage(page) {
+    console.log("current page",page)
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("auth"),
+    };
+    axios
+      .get(`http://localhost:9999/BookStore/home/book?page=${page}`, {
+        headers,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          this.setState({
+            loading: true,
+            _products: response.data.data.Books,
+          });
+          this.showPageList(response.data);
+        }
+      })
+      .catch((err) => {
+        if (err.response) {
+          if (err.response.data.errorCode !== null) {
+            alert(err.response.data.errorCode);
+          }
+        }
+      });
   }
   setParams = (event) => {
     let name = event.target.name;
@@ -361,7 +388,7 @@ export default class ProductList extends Component {
               {this.state.isSearch === false &&
                 this.state.isSearchByCate === false &&
                 pageList.map((page, index) => (
-                  <a key={index} onClick={() => this.getData(page)}>
+                  <a key={index} onClick={() => this.changePage(page)}>
                     {page + 1}
                   </a>
                 ))}

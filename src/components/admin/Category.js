@@ -44,6 +44,7 @@ export default class Category extends Component {
             loading: true,
             _categories: response.data.data.Categories,
           });
+          console.log(this.state._categories);
           this.showPageList(response.data);
         }
       })
@@ -170,6 +171,12 @@ export default class Category extends Component {
     this.setState({ [name]: value });
   };
 
+  onchangeCheckbox = () => {
+    this.setState({
+      isDelete: !this.state.isDelete,
+    });
+  }
+
   addItem = (e) => {
     e.preventDefault();
     const headers = {
@@ -199,7 +206,6 @@ export default class Category extends Component {
   };
 
   getUpdateCategory = (e, cateID) => {
-    console.log(cateID);
     e.preventDefault();
     const headers = {
       "Content-Type": "application/json",
@@ -241,10 +247,44 @@ export default class Category extends Component {
     var category = {
       categoryID: this.state.categoryID,
       categoryName: this.state.categoryName,
+      delete: this.state.isDelete
     };
     axios
       .put(
         `http://localhost:9999/BookStore/admin/update-category/${this.state.categoryID}`,
+        category,
+        {
+          headers,
+        }
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          alert(response.data.successCode);
+          this.loadData();
+        }
+      })
+      .catch((err) => {
+        if (err.response) {
+          if (err.response.data.errorCode !== null) {
+            alert(err.response.data.errorCode);
+          }
+        }
+      });
+  };
+
+  deleteItem = (e, cateID) => {
+    e.preventDefault();
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("auth"),
+    };
+    var category = {
+      categoryID: this.state.categoryID,
+      categoryName: this.state.categoryName,
+    };
+    axios
+      .put(
+        `http://localhost:9999/BookStore/admin/delete-category/${cateID}`,
         category,
         {
           headers,
@@ -294,8 +334,8 @@ export default class Category extends Component {
                   <label>Delete</label>
                   <input
                     type="checkbox"
-                    defaultChecked={this.state.isDelete}
-                    onChange={this.setParams}
+                    checked={this.state.isDelete}
+                    onChange={this.onchangeCheckbox}
                     name="isDelete"
                   />
                 </div>
@@ -317,6 +357,7 @@ export default class Category extends Component {
                     onClick={(e) => this.updateItem(e)}>
                     EDIT
                   </button>
+                  
                 )}
               </div>
             </div>
@@ -336,6 +377,9 @@ export default class Category extends Component {
                   />
                   <button type="submit" onClick={(e) => this.searchCategory(e)}>
                     <FontAwesomeIcon icon={faSearch} />
+                  </button>
+                  <button type="submit" onClick={this.setState.action = "ADD ITEM"}  >
+                    <a>Add Category </a>
                   </button>
                 </form>
               </div>
@@ -357,7 +401,7 @@ export default class Category extends Component {
                       <td>{category.categoryName}</td>
                       <td>{category.createDate}</td>
                       <td>{category.updateDate}</td>
-                      <td>{category.isDelete ? 'true' : 'false'}</td>
+                      <td>{category.delete ? "true" : "false"}</td>
                       <td>
                         <button
                           style={{ color: "blue" }}
@@ -369,7 +413,7 @@ export default class Category extends Component {
                         <button
                           style={{ color: "red" }}
                           onClick={(e) =>
-                            this.getUpdateCategory(e, category.categoryID)
+                            this.deleteItem(e, category.categoryID)
                           }>
                           <FontAwesomeIcon icon={faTrash} />
                         </button>

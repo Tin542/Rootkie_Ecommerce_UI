@@ -1,54 +1,60 @@
-  
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import axios from 'axios';
-import Navbar from './Navbar'
+import axios from "axios";
+import Navbar from "./Navbar";
 
 import "./assets/Login.css";
 
 export default function Login() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+  const history = useHistory();
 
-    const history = useHistory();
+  async function access() {
+    const body = {
+      username: username,
+      password: password,
+    };
 
-    async function access() {
-        const body = {
-            'username': username,
-            'password': password,
-        }
+    const headers = {
+      "Content-Type": "application/json",
+    };
 
-        const headers = {
-            'Content-Type': 'application/json',
-        };
+    let response = await axios.post(
+      "http://localhost:9999/BookStore/auth/signin",
+      body,
+      { headers }
+    );
+    localStorage.setItem(
+      "auth",
+      response.data.type + " " + response.data.token
+    );
+    return response;
+  }
 
-        let response = await axios.post('http://localhost:9999/BookStore/auth/signin', body, { headers })
-        localStorage.setItem("auth", response.data.type + " " + response.data.token)
-        return response;
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    try {
+      const authortication = await access();
+      if (authortication.data.roles[0] === "ROLE_ADMIN") {
+        history.push("/admin");
+      } else if (authortication.data.roles[0] === "ROLE_USER") {
+        history.push("/user");
+      } else {
+        history.push("/");
+      }
+    } catch (e) {
+      alert("Username or password incoorect !");
+      console.log(e.stack);
     }
+  }
 
-    async function handleSubmit(event) {
-        event.preventDefault();
-
-        try {
-            const authortication = await access();
-            if (authortication.data.roles[0] === "ROLE_ADMIN") {
-                history.push("/admin");
-            }
-            else {
-                history.push("/");
-            }
-        } catch (e) {
-            alert("Username or password incoorect !");
-            console.log(e.stack);
-        }
-    }
-
-    return (
-     <>
-     <Navbar/>
-        <form class="login">
+  return (
+    <>
+      <Navbar />
+      <form class="login">
         <div class="login-screen">
           <div class="app-title">
             <h1>Login</h1>
@@ -75,13 +81,16 @@ export default function Login() {
             />
             <label class="login-field-icon fui-lock" for="login-pass"></label>
           </div>
-          <button onClick={(e) => { handleSubmit(e) }} class="button">
+          <button
+            onClick={(e) => {
+              handleSubmit(e);
+            }}
+            class="button">
             Login
           </button>
           Dont have an account ? <Link to="/register">Register</Link>
-          
         </div>
       </form>
-      </>
-    )
+    </>
+  );
 }
