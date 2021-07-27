@@ -7,7 +7,7 @@ export default function HomePage() {
   const token = localStorage.getItem("auth");
 
   let check;
-  if (!token) {
+  if (token !== null) {
     check = "NOT_LOGGED_IN";
   } else {
     check = "LOGGED_IN";
