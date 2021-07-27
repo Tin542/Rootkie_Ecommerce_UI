@@ -25,6 +25,19 @@ export default class ProductList extends Component {
       isSearchByCate: false,
 
       page: 0,
+
+      bookID: 0,
+      bookName: "",
+      bookDescription: "",
+      bookPrice: "",
+      categoryName: "",
+      author: "",
+      publisher: "",
+      publish_year: 0,
+      isDelete: false,
+      quantity: 0,
+      image: ""
+
     };
   }
 
@@ -32,7 +45,6 @@ export default class ProductList extends Component {
     this.getData();
     this.getCategory();
   }
-
   getCategory() {
     const headers = {
       "Content-Type": "application/json",
@@ -198,7 +210,6 @@ export default class ProductList extends Component {
         }
       });
   }
-
   searchByCategory(cateID, cateName) {
     this.setState({ category_ID: cateID, searchByCateValue: cateName });
     const headers = {
@@ -232,7 +243,6 @@ export default class ProductList extends Component {
         }
       });
   }
-
   showSearchCatePageList(response) {
     var list = [];
     for (let i = 0; i < response.data.totalPages; i++) {
@@ -243,7 +253,6 @@ export default class ProductList extends Component {
       console.log("list search by cate page: " + list);
     }
   }
-
   changeSearchPageByCate(page) {
     this.setState({ page: page });
     const headers = {
@@ -277,6 +286,36 @@ export default class ProductList extends Component {
         }
       });
   }
+
+  deleteItem = (e, BookID) => {
+    e.preventDefault();
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("auth"),
+    };
+    
+    axios
+      .put(
+        `http://localhost:9999/BookStore/admin/delete-book/${BookID}`,
+        null,
+        {
+          headers,
+        }
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          alert(response.data.successCode);
+          this.loadData();
+        }
+      })
+      .catch((err) => {
+        if (err.response) {
+          if (err.response.data.errorCode !== null) {
+            alert(err.response.data.errorCode);
+          }
+        }
+      });
+  };
 
   render() {
     const {
@@ -387,6 +426,7 @@ export default class ProductList extends Component {
                         </button>
                         <button
                           style={{ color: "red" }}
+                          onClick={(e) => this.deleteItem(e, item.id)}
                           >
                           <FontAwesomeIcon icon={faTrash} />
                         </button>

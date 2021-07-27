@@ -278,14 +278,10 @@ export default class Category extends Component {
       "Content-Type": "application/json",
       Authorization: localStorage.getItem("auth"),
     };
-    var category = {
-      categoryID: this.state.categoryID,
-      categoryName: this.state.categoryName,
-    };
     axios
       .put(
         `http://localhost:9999/BookStore/admin/delete-category/${cateID}`,
-        category,
+        null,
         {
           headers,
         }
