@@ -5,6 +5,8 @@ import { isEmail } from "validator";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 
+import "./assets/Login.css"
+
 import Navbar from './Navbar';
 
 import "./assets/Login.css";

@@ -7,6 +7,7 @@ import User from './pages/UserPage';
 import Login from './components/Login';
 import Register from './components/Register';
 import Category from './components/admin/Category';
+import AddProduct from './components/admin/AddProduct';
 import "./App.css"
 
 
@@ -22,6 +23,7 @@ function App() {
           <Route path='/user' exact component={User} />
           <Route path='/admin' exact component={Admin} />
           <Route path='/product' exact component={Admin} />
+          <Route path='/addProduct' exact component={AddProduct} />
           <Route path='/category' exact component={Category} />
         </Switch>
       </Router>

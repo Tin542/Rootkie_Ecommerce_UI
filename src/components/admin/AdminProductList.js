@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import {
+  Link,
+} from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
@@ -286,7 +289,6 @@ export default class ProductList extends Component {
         }
       });
   }
-
   deleteItem = (e, BookID) => {
     e.preventDefault();
     const headers = {
@@ -376,7 +378,10 @@ export default class ProductList extends Component {
               ))}
             </ul>
           </details>
-          <button className="add_button">Add Book</button>
+          <Link to={"/addProduct"}>
+             <button className="add_button">Add Book</button>
+          </Link>
+         
         </div>
         <div className="container">
           <div className="row">
