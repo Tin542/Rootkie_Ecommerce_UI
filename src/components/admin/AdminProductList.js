@@ -174,7 +174,7 @@ export default class ProductList extends Component {
         }
       });
   };
-  showSearchPageList(response) {
+  showSearchPageList = (response) => {
     var list = [];
     for (let i = 0; i < response.data.totalPages; i++) {
       list.push(i);
@@ -398,6 +398,8 @@ export default class ProductList extends Component {
                     <th>Author</th>
                     <th>Publisher</th>
                     <th>Publish year</th>
+                    <th>Create date</th>
+                    <th>Update date</th>
                     <th>isDelete</th>
                     <th>Action</th>
                   </tr>
@@ -422,6 +424,8 @@ export default class ProductList extends Component {
                       <td>{item.author}</td>
                       <td>{item.publisher}</td>
                       <td>{item.publish_year}</td>
+                      <td>{item.createDate}</td>
+                      <td>{item.updateDate}</td>
                       <td>{item.delete ? "true" : "false"}</td>
                       <td>
                       <button

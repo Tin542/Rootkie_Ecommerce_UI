@@ -40,6 +40,7 @@ const number = (value) => {
 export default class AddProduct extends Component {
   constructor(props) {
     super(props);
+    this.onChangeCategoryName = this.onChangeCategoryName.bind(this);
 
     this.state = {
       listCategory: [],
@@ -93,34 +94,42 @@ export default class AddProduct extends Component {
     this.setState({ [name]: value });
   };
 
-  addBook(e) {
+  onChangeCategoryName = (e) => {
+    this.setState({ 
+      categoryName: e.target.value,
+    });
+  }
+
+  addBook = (e) => {
     e.preventDefault();
-    var book = {
-        book_name: this.state.book_name,
-        bookDescription: this.state.bookDescription,
-        bookPrice: this.state.bookPrice,
-        categoryName: this.state.categoryName,
-        author: this.state.author,
-        publisher: this.state.publisher,
-        publish_year: this.state.publish_year,
-        image: this.state.image,
-        quantity: this.state.quantity,
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("auth"),
     };
-    console.log(book);
-    axios.post("http://localhost:9999/BookStore/admin/add-book/", book)
-    .then(response => {
-      if (response.status === 200) {
-          console.log(response);
+    var books = {
+      book_name: this.state.book_name,
+      bookDescription: this.state.bookDescription,
+      bookPrice: this.state.bookPrice,
+      categoryName: this.state.categoryName,
+      author: this.state.author,
+      publisher: this.state.publisher,
+      publish_year: this.state.publish_year,
+      image: this.state.image,
+      quantity: this.state.quantity,
+    };
+    console.log(books)
+    axios
+      .post(`http://localhost:9999/BookStore/admin/add-book`, books, {
+        headers,
+      })
+      .then((response) => {
+        if (response.status === 200) {
           alert(response.data.successCode);
-      }else{
-        console.log(response);
-      }
-  })
-  .catch((err) => {
-    console.log(err);
-    alert(err.response.data.errorCode);
-  });
-    return book;
+        }
+      })
+      .catch((err) => {
+        alert(err.message)
+      });
   }
 
   render() {
@@ -150,7 +159,7 @@ export default class AddProduct extends Component {
               <Input
                 type="text"
                 placeholder="Enter book description"
-                name="bookDes"
+                name="bookDescription"
                 class="login-field"
                 id="book-des"
                 value={this.state.bookDescription}
@@ -178,7 +187,7 @@ export default class AddProduct extends Component {
               <Input
                 type="text"
                 placeholder="Enter Author"
-                name="bookAuth"
+                name="author"
                 class="login-field"
                 id="book-author"
                 value={this.state.author}
@@ -208,7 +217,7 @@ export default class AddProduct extends Component {
               <Input
                 type="text"
                 placeholder="Enter Publish Year"
-                name="publishYear"
+                name="publish_year"
                 class="login-field"
                 id="book-publisher"
                 value={this.state.publish_year}
@@ -257,7 +266,7 @@ export default class AddProduct extends Component {
               id="subject_input"
               value={this.state.categoryName}
               name="categoryName"
-              onChange={this.setParams}>
+              onChange={this.onChangeCategoryName}>
               <option hidden selected>
                 Categories
               </option>
