@@ -343,7 +343,7 @@ export default class ProductList extends Component {
         }
       });
   };
-  updateItem = (e, BookID) =>{
+  updateItem = (e, BookID) => {
     e.preventDefault();
     const headers = {
       "Content-Type": "application/json",
@@ -360,8 +360,9 @@ export default class ProductList extends Component {
       publish_year: this.state.publish_year,
       image: this.state.image,
       quantity: this.state.quantity,
+      delete: this.state.isDelete,
     };
-    console.log(books)
+    console.log(books);
     axios
       .put(
         `http://localhost:9999/BookStore/admin/update-book/${BookID}`,
@@ -375,9 +376,8 @@ export default class ProductList extends Component {
           alert(response.data.successCode);
           this.setState({
             modalIsOpen: false,
-          })
+          });
           this.loadData();
-
         }
       })
       .catch((err) => {
@@ -412,7 +412,7 @@ export default class ProductList extends Component {
             categoryName: response.data.data.categoryName,
             author: response.data.data.author,
             publisher: response.data.data.publisher,
-            publish_year:response.data.data.publish_year,
+            publish_year: response.data.data.publish_year,
             isDelete: response.data.data.delete,
             quantity: response.data.data.quantity,
             image: response.data.data.image,
@@ -434,6 +434,11 @@ export default class ProductList extends Component {
     });
   };
 
+  onchangeCheckbox = () => {
+    this.setState({
+      isDelete: !this.state.isDelete,
+    });
+  };
   render() {
     const {
       loading,
@@ -591,155 +596,174 @@ export default class ProductList extends Component {
             onRequestClose={this.closeModal}>
             <button onClick={this.closeModal}>Close</button>
             <div>
-            <Form class="login">
-          <div class="login-screen">
-            <div class="app-title">
-              <h1>Add Product</h1>
-            </div>
-            <div class="control-group">
-              <Input
-                type="text"
-                placeholder="Enter book name"
-                name="book_name"
-                class="login-field"
-                id="book-name"
-                value={this.state.book_name}
-                onChange={this.setParams}
-                validations={[required, short]}
-              />
-            </div>
-            <label class="login-field-icon fui-user" for="book-name"></label>
+              <Form class="login">
+                <div class="login-screen">
+                  <div class="app-title">
+                    <h1>Update Product</h1>
+                  </div>
+                  <div class="control-group">
+                    <Input
+                      type="text"
+                      placeholder="Enter book name"
+                      name="book_name"
+                      class="login-field"
+                      id="book-name"
+                      value={this.state.book_name}
+                      onChange={this.setParams}
+                      validations={[required, short]}
+                    />
+                  </div>
+                  <label
+                    class="login-field-icon fui-user"
+                    for="book-name"></label>
 
-            <div class="control-group">
-              <Input
-                type="text"
-                placeholder="Enter book description"
-                name="bookDescription"
-                class="login-field"
-                id="book-des"
-                value={this.state.bookDescription}
-                onChange={this.setParams}
-                validations={[required, short]}
-              />
-            </div>
-            <label class="login-field-icon fui-user" for="book-des"></label>
+                  <div class="control-group">
+                    <Input
+                      type="text"
+                      placeholder="Enter book description"
+                      name="bookDescription"
+                      class="login-field"
+                      id="book-des"
+                      value={this.state.bookDescription}
+                      onChange={this.setParams}
+                      validations={[required, short]}
+                    />
+                  </div>
+                  <label
+                    class="login-field-icon fui-user"
+                    for="book-des"></label>
 
-            <div class="control-group">
-              <Input
-                type="text"
-                placeholder="Enter book Price"
-                name="bookPrice"
-                class="login-field"
-                id="book-price"
-                value={this.state.bookPrice}
-                onChange={this.setParams}
-                validations={[required, short]}
-              />
-            </div>
-            <label class="login-field-icon fui-user" for="book-price"></label>
+                  <div class="control-group">
+                    <Input
+                      type="text"
+                      placeholder="Enter book Price"
+                      name="bookPrice"
+                      class="login-field"
+                      id="book-price"
+                      value={this.state.bookPrice}
+                      onChange={this.setParams}
+                      validations={[required, short]}
+                    />
+                  </div>
+                  <label
+                    class="login-field-icon fui-user"
+                    for="book-price"></label>
 
-            <div class="control-group">
-              <Input
-                type="text"
-                placeholder="Enter Author"
-                name="author"
-                class="login-field"
-                id="book-author"
-                value={this.state.author}
-                onChange={this.setParams}
-                validations={[required, short]}
-              />
-            </div>
-            <label class="login-field-icon fui-user" for="book-author"></label>
+                  <div class="control-group">
+                    <Input
+                      type="text"
+                      placeholder="Enter Author"
+                      name="author"
+                      class="login-field"
+                      id="book-author"
+                      value={this.state.author}
+                      onChange={this.setParams}
+                      validations={[required, short]}
+                    />
+                  </div>
+                  <label
+                    class="login-field-icon fui-user"
+                    for="book-author"></label>
 
-            <div class="control-group">
-              <Input
-                type="text"
-                placeholder="Enter Publisher"
-                name="publisher"
-                class="login-field"
-                id="book-publisher"
-                value={this.state.publisher}
-                onChange={this.setParams}
-                validations={[required, short]}
-              />
-            </div>
-            <label
-              class="login-field-icon fui-user"
-              for="book-publisher"></label>
+                  <div class="control-group">
+                    <Input
+                      type="text"
+                      placeholder="Enter Publisher"
+                      name="publisher"
+                      class="login-field"
+                      id="book-publisher"
+                      value={this.state.publisher}
+                      onChange={this.setParams}
+                      validations={[required, short]}
+                    />
+                  </div>
+                  <label
+                    class="login-field-icon fui-user"
+                    for="book-publisher"></label>
 
-            <div class="control-group">
-              <Input
-                type="text"
-                placeholder="Enter Publish Year"
-                name="publish_year"
-                class="login-field"
-                id="book-publisher"
-                value={this.state.publish_year}
-                onChange={this.setParams}
-                validations={[required, short]}
-              />
-            </div>
-            <label
-              class="login-field-icon fui-user"
-              for="book-publisher"></label>
+                  <div class="control-group">
+                    <Input
+                      type="text"
+                      placeholder="Enter Publish Year"
+                      name="publish_year"
+                      class="login-field"
+                      id="book-publisher"
+                      value={this.state.publish_year}
+                      onChange={this.setParams}
+                      validations={[required, short]}
+                    />
+                  </div>
+                  <label
+                    class="login-field-icon fui-user"
+                    for="book-publisher"></label>
 
-            <div class="control-group">
-              <Input
-                type="text"
-                placeholder="Enter Quantity"
-                name="quantity"
-                class="login-field"
-                id="book-quantity"
-                value={this.state.quantity}
-                onChange={this.setParams}
-                validations={[required, short]}
-              />
-            </div>
-            <label
-              class="login-field-icon fui-user"
-              for="book-quantity"></label>
+                  <div class="control-group">
+                    <Input
+                      type="text"
+                      placeholder="Enter Quantity"
+                      name="quantity"
+                      class="login-field"
+                      id="book-quantity"
+                      value={this.state.quantity}
+                      onChange={this.setParams}
+                      validations={[required, short]}
+                    />
+                  </div>
+                  <label
+                    class="login-field-icon fui-user"
+                    for="book-quantity"></label>
 
-            <div class="control-group">
-              <Input
-                type="text"
-                placeholder="Enter Image URL"
-                name="image"
-                class="login-field"
-                id="book-img"
-                value={this.state.image}
-                onChange={this.setParams}
-                validations={[required, short]}
-              />
-            </div>
-            <label
-              class="login-field-icon fui-user"
-              for="book-img"></label>
+                  <div class="control-group">
+                    <Input
+                      type="text"
+                      placeholder="Enter Image URL"
+                      name="image"
+                      class="login-field"
+                      id="book-img"
+                      value={this.state.image}
+                      onChange={this.setParams}
+                      validations={[required, short]}
+                    />
+                  </div>
+                  
 
-            <select
-              name="categoryName"
-              id="subject_input"
-              value={this.state.categoryName}
-              name="categoryName"
-              onChange={this.onChangeCategoryName}>
-              <option hidden selected>
-                Categories
-              </option>
-              {this.state._categories.map((item) => (
-                <option key={item.categoryID} value={this.state.categoryName}>
-                  {item.categoryName}
-                </option>
-              ))}
-            </select>
-                <hr/>
-            <Input
-              class="btn btn-primary"
-              onClick={(e) => this.updateItem(e, this.state.bookID)}
-              type="submit"
-              value="Update Book"
-            />
-          </div>
-        </Form>
+                  <select
+                    name="categoryName"
+                    id="subject_input"
+                    value={this.state.categoryName}
+                    name="categoryName"
+                    onChange={this.onChangeCategoryName}>
+                    <option hidden selected>
+                      Categories
+                    </option>
+                    {this.state._categories.map((item) => (
+                      <option key={item.categoryID} value={item.categoryName}>
+                        {item.categoryName}
+                      </option>
+                    ))}
+                  </select>
+                  <label
+                    class="login-field-icon fui-user"
+                    for="book-img"></label>
+
+                  <div className="form-group">
+                    <label>Delete</label>
+                    <input
+                      type="checkbox"
+                      checked={this.state.isDelete}
+                      onChange={this.onchangeCheckbox}
+                      name="isDelete"
+                    />
+                  </div>
+                  <hr />
+                  <Input
+                    class="btn btn-primary"
+                    onClick={(e) => this.updateItem(e, this.state.bookID)}
+                    type="submit"
+                    value="Update Book"
+                  />
+                </div>
+              </Form>
             </div>
           </Modal>
         </div>

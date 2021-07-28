@@ -61,7 +61,7 @@ const vaddress = (value) => {
   }
 };
 
-const vphone = (value) => {
+/* const vphone = (value) => {
   var pattern = new RegExp(/^[0-9\b]+$/);
   if (!pattern.test(value) || value.length) {
     return (
@@ -70,7 +70,7 @@ const vphone = (value) => {
       </div>
     );
   }
-};
+}; */
 
 const vpassword = (value) => {
   if (value.length < 6 || value.length > 20) {
@@ -154,7 +154,7 @@ export default class Register extends Component {
   })
   .catch((err) => {
     console.log(err);
-    alert("Register Failure!");
+    alert(err.response.data.message);
   });
     return Account;
   }
@@ -229,7 +229,7 @@ export default class Register extends Component {
               id="reg-phone"
               value={this.state.phone}
               onChange={this.onChangephone}
-              validations={[required, vphone]}
+              validations={[required]}
             />
             <label class="login-field-icon fui-user" for="reg-phone"></label>
           </div>
