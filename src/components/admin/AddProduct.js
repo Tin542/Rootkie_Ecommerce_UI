@@ -28,8 +28,8 @@ const short = (value) => {
 };
 
 const year = (value) => {
-  var reg = /^$|[0-9]{4}/;
-  if (!reg.test(value) || value < 1800) {
+  var reg = /^[0-9]+$/;
+  if (!reg.test(value) || value < 1800 || value > 2021) {
     return (
       <div className="alert alert-danger" role="alert">
         Year must be number and must from 1800 !!
@@ -39,7 +39,7 @@ const year = (value) => {
 };
 
 const number = (value) => {
-  var reg = /^$|[0-9]/;
+  var reg = /^[0-9]+$/;
   if (!reg.test(value) || value < 1) {
     return (
       <div className="alert alert-danger" role="alert">
