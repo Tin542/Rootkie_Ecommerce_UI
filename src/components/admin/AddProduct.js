@@ -27,16 +27,28 @@ const short = (value) => {
   }
 };
 
-const number = (value) => {
-  var reg = new RegExp("^[0-9]+$");
-  if (!reg.test(value)) {
+const year = (value) => {
+  var reg = /^$|[0-9]{4}/;
+  if (!reg.test(value) || value < 1800) {
     return (
       <div className="alert alert-danger" role="alert">
-        bookName required atleast 2 chars !!
+        Year must be number and must from 1800 !!
       </div>
     );
   }
 };
+
+const number = (value) => {
+  var reg = /^$|[0-9]/;
+  if (!reg.test(value) || value < 1) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        must be number and bigger than 0 !!
+      </div>
+    );
+  }
+};
+
 export default class AddProduct extends Component {
   constructor(props) {
     super(props);
@@ -178,7 +190,7 @@ export default class AddProduct extends Component {
                 id="book-price"
                 value={this.state.bookPrice}
                 onChange={this.setParams}
-                validations={[required, short]}
+                validations={[required, number]}
               />
             </div>
             <label class="login-field-icon fui-user" for="book-price"></label>
@@ -222,7 +234,7 @@ export default class AddProduct extends Component {
                 id="book-publisher"
                 value={this.state.publish_year}
                 onChange={this.setParams}
-                validations={[required, short]}
+                validations={[required, year]}
               />
             </div>
             <label
@@ -238,7 +250,7 @@ export default class AddProduct extends Component {
                 id="book-quantity"
                 value={this.state.quantity}
                 onChange={this.setParams}
-                validations={[required, short]}
+                validations={[required, number]}
               />
             </div>
             <label

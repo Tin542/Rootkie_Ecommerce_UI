@@ -28,6 +28,8 @@ const short = (value) => {
     );
   }
 };
+
+
 export default class ProductList extends Component {
   constructor(props) {
     super(props);
@@ -502,6 +504,8 @@ export default class ProductList extends Component {
               <button className="add_button">Add Book</button>
             </Link>
           </div>
+
+         {/*  List Product */}
           <div className="container">
             <div className="row">
               <div className="col-md-8">
@@ -554,7 +558,7 @@ export default class ProductList extends Component {
                           </button>
                           <button
                             style={{ color: "red" }}
-                            onClick={(e) => this.deleteItem(e, item.id)}>
+                            onClick={(e) => {if (window.confirm('Are you sure you wish to delete this item?')) this.deleteItem(e, item.id)}} >
                             <FontAwesomeIcon icon={faTrash} />
                           </button>
                         </td>
@@ -590,7 +594,8 @@ export default class ProductList extends Component {
               </div>
             </div>
           </div>
-
+          
+          {/* Update form */}
           <Modal
             isOpen={this.state.modalIsOpen}
             onRequestClose={this.closeModal}>
@@ -725,7 +730,6 @@ export default class ProductList extends Component {
                       validations={[required, short]}
                     />
                   </div>
-                  
 
                   <select
                     name="categoryName"
@@ -733,9 +737,6 @@ export default class ProductList extends Component {
                     value={this.state.categoryName}
                     name="categoryName"
                     onChange={this.onChangeCategoryName}>
-                    <option hidden selected>
-                      Categories
-                    </option>
                     {this.state._categories.map((item) => (
                       <option key={item.categoryID} value={item.categoryName}>
                         {item.categoryName}

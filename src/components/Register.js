@@ -61,16 +61,16 @@ const vaddress = (value) => {
   }
 };
 
-/* const vphone = (value) => {
-  var pattern = new RegExp(/^[0-9\b]+$/);
-  if (!pattern.test(value) || value.length) {
+const vphone = (value) => {
+  var pattern = /^$|[0-9]{10}/;
+  if (!pattern.test(value)) {
     return (
       <div className="alert alert-danger" role="alert">
         The phone invalid !
       </div>
     );
   }
-}; */
+};
 
 const vpassword = (value) => {
   if (value.length < 6 || value.length > 20) {
@@ -229,7 +229,7 @@ export default class Register extends Component {
               id="reg-phone"
               value={this.state.phone}
               onChange={this.onChangephone}
-              validations={[required]}
+              validations={[required, vphone]}
             />
             <label class="login-field-icon fui-user" for="reg-phone"></label>
           </div>

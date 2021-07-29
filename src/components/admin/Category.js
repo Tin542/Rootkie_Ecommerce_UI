@@ -3,6 +3,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "./AdminNavbar";
 import axios from "axios";
+import Input from "react-validation/build/input";
+import Form from "react-validation/build/form";
+
+
+const required = (value) => {
+  if (!value) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        This field is required!
+      </div>
+    );
+  }
+};
 
 export default class Category extends Component {
   constructor(props) {
@@ -198,8 +211,8 @@ export default class Category extends Component {
       })
       .catch((err) => {
         if (err.response) {
-          if (err.response.data.errorCode !== null) {
-            alert(err.response.data.errorCode);
+          if (err.response.data.message ==='CATEGORY_ALREADY_EXISTED !') {
+            alert("Category is already existed !!");
           }
         }
       });
@@ -313,21 +326,25 @@ export default class Category extends Component {
         <div className="container">
           <div className="row">
             {/* update/add form */}
-            <div className="col-md-3">
+          
+            <div className="col-md-3">  
+            <Form>
               <h1>{this.state.action}</h1>
+              
               <div className="form-group">
                 <label>Category Name</label>
-                <input
+                <Input
                   type="text"
                   name="categoryName"
                   className="form-control"
                   onChange={this.setParams}
                   value={this.state.categoryName}
+                  validations={[required]}
                 />
               </div>
               {this.state.action === "UPDATE ITEM" && (
                 <div className="form-group">
-                  <label>Delete</label>
+                  <label>Deleted</label>
                   <input
                     type="checkbox"
                     checked={this.state.isDelete}
@@ -356,7 +373,9 @@ export default class Category extends Component {
                   
                 )}
               </div>
+              </Form>
             </div>
+            
 
             <div className="col-md-9">
               <h1>List Category</h1>
@@ -405,11 +424,12 @@ export default class Category extends Component {
                             this.getUpdateCategory(e, category.categoryID)
                           }>
                           <FontAwesomeIcon icon={faEdit} />
+                          
                         </button>
                         <button
                           style={{ color: "red" }}
-                          onClick={(e) =>
-                            this.deleteItem(e, category.categoryID)
+                          onClick={(e) =>{
+                            if (window.confirm('Are you sure you wish to delete this item?')) this.deleteItem(e, category.categoryID)} 
                           }>
                           <FontAwesomeIcon icon={faTrash} />
                         </button>
