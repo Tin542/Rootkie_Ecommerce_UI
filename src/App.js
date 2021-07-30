@@ -7,6 +7,8 @@ import User from './pages/UserPage';
 import Login from './components/Login';
 import Register from './components/Register';
 import Category from './components/admin/Category';
+import Publisher from './components/admin/Publisher';
+import Author from './components/admin/Author';
 import AddProduct from './components/admin/AddProduct';
 import "./App.css"
 
@@ -25,6 +27,8 @@ function App() {
           <Route path='/product' exact component={Admin} />
           <Route path='/addProduct' exact component={AddProduct} />
           <Route path='/category' exact component={Category} />
+          <Route path='/publisher' exact component={Publisher} />
+          <Route path='/author' exact component={Author} />
         </Switch>
       </Router>
     </>

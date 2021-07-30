@@ -40,6 +40,18 @@ export default function AdminNavbar() {
         </li>
 
         <li className="nav-item">
+          <Link to={"/publisher"} className="nav-link">
+            Publisher
+          </Link>
+        </li>
+
+        <li className="nav-item">
+          <Link to={"/author"} className="nav-link">
+            Author
+          </Link>
+        </li>
+
+        <li className="nav-item">
           <Link to={"/home"} className="nav-link">
             <a
               onClick={(e) => {

@@ -21,7 +21,7 @@ export default class Category extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      _categories: [],
+      _publisher: [],
       isload: false,
       pageList: [],
 
@@ -30,8 +30,8 @@ export default class Category extends Component {
       isSearch: false,
 
       action: "ADD ITEM", //UPDATE ITEM
-      categoryID: "",
-      categoryName: "",
+      PublisherID: "",
+      PublisherName: "",
       isDelete: false,
 
       page: 0,
@@ -48,24 +48,22 @@ export default class Category extends Component {
       Authorization: localStorage.getItem("auth"),
     };
     axios
-      .get(`http://localhost:9999/BookStore/admin/category`, {
+      .get(`http://localhost:9999/BookStore/admin/publisher`, {
         headers,
       })
       .then((response) => {
         if (response.status === 200) {
           this.setState({
             loading: true,
-            _categories: response.data.data.Categories,
+            _publisher: response.data.data.publishers,
           });
-          console.log(this.state._categories);
+          console.log(this.state._publisher);
           this.showPageList(response.data);
         }
       })
       .catch((err) => {
         if (err.response) {
-          if (err.response.data.errorCode !== null) {
-            alert(err.response.data.errorCode);
-          }
+          alert(err.response.data.message)
         }
       });
   }
@@ -85,23 +83,21 @@ export default class Category extends Component {
       Authorization: localStorage.getItem("auth"),
     };
     axios
-      .get(`http://localhost:9999/BookStore/admin/category?page=${page}`, {
+      .get(`http://localhost:9999/BookStore/admin/publisher?page=${page}`, {
         headers,
       })
       .then((response) => {
         if (response.status === 200) {
           this.setState({
             loading: true,
-            _categories: response.data.data.Categories,
+            _publisher: response.data.data.publishers,
           });
           this.showPageList(response.data);
         }
       })
       .catch((err) => {
         if (err.response) {
-          if (err.response.data.errorCode !== null) {
-            alert(err.response.data.errorCode);
-          }
+          alert(err.response.data.message)
         }
       });
   }
@@ -113,7 +109,7 @@ export default class Category extends Component {
     };
     axios
       .get(
-        `http://localhost:9999/BookStore/admin/category?keyword=${this.state.searchValue}`,
+        `http://localhost:9999/BookStore/admin/publisher?keyword=${this.state.searchValue}`,
         {
           headers,
         }
@@ -123,16 +119,14 @@ export default class Category extends Component {
           this.setState({
             loading: true,
             isSearch: true,
-            _categories: response.data.data.Categories,
+            _publisher: response.data.data.publishers,
           });
           this.showSearchPageList(response.data);
         }
       })
       .catch((err) => {
         if (err.response) {
-          if (err.response.data.errorCode !== null) {
-            alert(err.response.data.errorCode);
-          }
+          alert(err.response.data.message);
         }
       });
   };
@@ -154,7 +148,7 @@ export default class Category extends Component {
     };
     axios
       .get(
-        `http://localhost:9999/BookStore/admin/category?keyword=${this.state.searchValue}&page=${currentPage}`,
+        `http://localhost:9999/BookStore/admin/publisher?keyword=${this.state.searchValue}&page=${currentPage}`,
         {
           headers,
         }
@@ -164,16 +158,14 @@ export default class Category extends Component {
           this.setState({
             loading: true,
             isSearch: true,
-            _categories: response.data.data.Categories,
+            _publisher: response.data.data.publishers,
           });
           this.showSearchPageList(response.data);
         }
       })
       .catch((err) => {
         if (err.response) {
-          if (err.response.data.errorCode !== null) {
-            alert(err.response.data.errorCode);
-          }
+         alert(err.response.data.message)
         }
       });
   }
@@ -196,11 +188,11 @@ export default class Category extends Component {
       "Content-Type": "application/json",
       Authorization: localStorage.getItem("auth"),
     };
-    var category = {
-      categoryName: this.state.categoryName,
+    var publisher = {
+        publisherName: this.state.PublisherName,
     };
     axios
-      .post(`http://localhost:9999/BookStore/admin/add-category`, category, {
+      .post(`http://localhost:9999/BookStore/admin/add-publisher`, publisher, {
         headers,
       })
       .then((response) => {
@@ -214,9 +206,7 @@ export default class Category extends Component {
       })
       .catch((err) => {
         if (err.response) {
-          if (err.response.data.message ==='CATEGORY_ALREADY_EXISTED !') {
-            alert("Category is already existed !!");
-          }
+          alert(err.response.data.message);
         }
       });
   };
@@ -230,7 +220,7 @@ export default class Category extends Component {
 
     axios
       .get(
-        `http://localhost:9999/BookStore/home/get-category-by-id/${cateID}`,
+        `http://localhost:9999/BookStore/home/publisher/${cateID}`,
         {
           headers,
         }
@@ -238,8 +228,8 @@ export default class Category extends Component {
       .then((response) => {
         if (response.status === 200) {
           this.setState({
-            categoryID: response.data.data.categoryID,
-            categoryName: response.data.data.categoryName,
+            PublisherID: response.data.data.publisherID,
+            PublisherName: response.data.data.publisherName,
             isDelete: response.data.data.delete,
             action: "UPDATE ITEM",
           });
@@ -247,9 +237,7 @@ export default class Category extends Component {
       })
       .catch((err) => {
         if (err.response) {
-          if (err.response.data.errorCode !== null) {
-            alert(err.response.data.errorCode);
-          }
+          alert(err.response.data.message)
         }
       });
   };
@@ -261,13 +249,13 @@ export default class Category extends Component {
       Authorization: localStorage.getItem("auth"),
     };
     var category = {
-      categoryID: this.state.categoryID,
-      categoryName: this.state.categoryName,
+        publisherID: this.state.PublisherID,
+        publisherName: this.state.PublisherName,
       delete: this.state.isDelete
     };
     axios
       .put(
-        `http://localhost:9999/BookStore/admin/update-category/${this.state.categoryID}`,
+        `http://localhost:9999/BookStore/admin/update-publisher/${this.state.PublisherID}`,
         category,
         {
           headers,
@@ -284,9 +272,7 @@ export default class Category extends Component {
       })
       .catch((err) => {
         if (err.response) {
-          if (err.response.data.errorCode !== null) {
-            alert(err.response.data.errorCode);
-          }
+          alert(err.response.data.message)
         }
       });
   };
@@ -299,7 +285,7 @@ export default class Category extends Component {
     };
     axios
       .put(
-        `http://localhost:9999/BookStore/admin/delete-category/${cateID}`,
+        `http://localhost:9999/BookStore/admin/delete-publisher/${cateID}`,
         null,
         {
           headers,
@@ -316,15 +302,13 @@ export default class Category extends Component {
       })
       .catch((err) => {
         if (err.response) {
-          if (err.response.data.errorCode !== null) {
-            alert(err.response.data.errorCode);
-          }
+          alert(err.response.data.message)
         }
       });
   };
 
   render() {
-    const { loading, _categories, pageList, searchPageList } = this.state;
+    const { loading, _publisher, pageList, searchPageList } = this.state;
 
     if (!loading) {
       return <h1>loading...</h1>;
@@ -341,13 +325,13 @@ export default class Category extends Component {
               <h1>{this.state.action}</h1>
               
               <div className="form-group">
-                <label>Category Name</label>
+                <label>Publisher Name</label>
                 <Input
                   type="text"
-                  name="categoryName"
+                  name="PublisherName"
                   className="form-control"
                   onChange={this.setParams}
-                  value={this.state.categoryName}
+                  value={this.state.PublisherName}
                   validations={[required]}
                 />
               </div>
@@ -387,7 +371,7 @@ export default class Category extends Component {
             
 
             <div className="col-md-9">
-              <h1>List Category</h1>
+              <h1>List Publisher</h1>
               {/*  search form */}
               <div class="search-container">
                 <form>
@@ -403,7 +387,7 @@ export default class Category extends Component {
                     <FontAwesomeIcon icon={faSearch} />
                   </button>
                   <button type="submit" onClick={this.setState.action = "ADD ITEM"}  >
-                    <a>Add Category </a>
+                    <a>Add Publisher </a>
                   </button>
                 </form>
               </div>
@@ -419,18 +403,18 @@ export default class Category extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {_categories.map((category) => (
-                    <tr key={category.categoryID}>
-                      <td>{category.categoryID}</td>
-                      <td>{category.categoryName}</td>
-                      <td>{category.createDate}</td>
-                      <td>{category.updateDate}</td>
-                      <td>{category.delete ? "true" : "false"}</td>
+                  {_publisher.map((publisher) => (
+                    <tr key={publisher.publisherID}>
+                      <td>{publisher.publisherID}</td>
+                      <td>{publisher.publisherName}</td>
+                      <td>{publisher.createDate}</td>
+                      <td>{publisher.updateDate}</td>
+                      <td>{publisher.delete ? "true" : "false"}</td>
                       <td>
                         <button
                           style={{ color: "blue" }}
                           onClick={(e) =>
-                            this.getUpdateCategory(e, category.categoryID)
+                            this.getUpdateCategory(e, publisher.publisherID)
                           }>
                           <FontAwesomeIcon icon={faEdit} />
                           
@@ -438,7 +422,7 @@ export default class Category extends Component {
                         <button
                           style={{ color: "red" }}
                           onClick={(e) =>{
-                            if (window.confirm('Are you sure you wish to delete this item?')) this.deleteItem(e, category.categoryID)} 
+                            if (window.confirm('Are you sure you wish to delete this item?')) this.deleteItem(e, publisher.publisherID)} 
                           }>
                           <FontAwesomeIcon icon={faTrash} />
                         </button>

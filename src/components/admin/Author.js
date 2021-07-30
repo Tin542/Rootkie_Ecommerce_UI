@@ -6,7 +6,6 @@ import axios from "axios";
 import Input from "react-validation/build/input";
 import Form from "react-validation/build/form";
 
-
 const required = (value) => {
   if (!value) {
     return (
@@ -21,7 +20,7 @@ export default class Category extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      _categories: [],
+      _author: [],
       isload: false,
       pageList: [],
 
@@ -30,8 +29,8 @@ export default class Category extends Component {
       isSearch: false,
 
       action: "ADD ITEM", //UPDATE ITEM
-      categoryID: "",
-      categoryName: "",
+      authorID: "",
+      authorName: "",
       isDelete: false,
 
       page: 0,
@@ -48,24 +47,22 @@ export default class Category extends Component {
       Authorization: localStorage.getItem("auth"),
     };
     axios
-      .get(`http://localhost:9999/BookStore/admin/category`, {
+      .get(`http://localhost:9999/BookStore/admin/author`, {
         headers,
       })
       .then((response) => {
         if (response.status === 200) {
           this.setState({
             loading: true,
-            _categories: response.data.data.Categories,
+            _author: response.data.data.authors,
           });
-          console.log(this.state._categories);
+          console.log(this.state._author);
           this.showPageList(response.data);
         }
       })
       .catch((err) => {
         if (err.response) {
-          if (err.response.data.errorCode !== null) {
-            alert(err.response.data.errorCode);
-          }
+          alert(err.response.data.message);
         }
       });
   }
@@ -85,23 +82,21 @@ export default class Category extends Component {
       Authorization: localStorage.getItem("auth"),
     };
     axios
-      .get(`http://localhost:9999/BookStore/admin/category?page=${page}`, {
+      .get(`http://localhost:9999/BookStore/admin/author?page=${page}`, {
         headers,
       })
       .then((response) => {
         if (response.status === 200) {
           this.setState({
             loading: true,
-            _categories: response.data.data.Categories,
+            _author: response.data.data.authors,
           });
           this.showPageList(response.data);
         }
       })
       .catch((err) => {
         if (err.response) {
-          if (err.response.data.errorCode !== null) {
-            alert(err.response.data.errorCode);
-          }
+          alert(err.response.data.message);
         }
       });
   }
@@ -113,7 +108,7 @@ export default class Category extends Component {
     };
     axios
       .get(
-        `http://localhost:9999/BookStore/admin/category?keyword=${this.state.searchValue}`,
+        `http://localhost:9999/BookStore/admin/author?keyword=${this.state.searchValue}`,
         {
           headers,
         }
@@ -123,16 +118,14 @@ export default class Category extends Component {
           this.setState({
             loading: true,
             isSearch: true,
-            _categories: response.data.data.Categories,
+            _author: response.data.data.authors,
           });
           this.showSearchPageList(response.data);
         }
       })
       .catch((err) => {
         if (err.response) {
-          if (err.response.data.errorCode !== null) {
-            alert(err.response.data.errorCode);
-          }
+          alert(err.response.data.message);
         }
       });
   };
@@ -154,7 +147,7 @@ export default class Category extends Component {
     };
     axios
       .get(
-        `http://localhost:9999/BookStore/admin/category?keyword=${this.state.searchValue}&page=${currentPage}`,
+        `http://localhost:9999/BookStore/admin/author?keyword=${this.state.searchValue}&page=${currentPage}`,
         {
           headers,
         }
@@ -164,16 +157,14 @@ export default class Category extends Component {
           this.setState({
             loading: true,
             isSearch: true,
-            _categories: response.data.data.Categories,
+            _author: response.data.data.authors,
           });
           this.showSearchPageList(response.data);
         }
       })
       .catch((err) => {
         if (err.response) {
-          if (err.response.data.errorCode !== null) {
-            alert(err.response.data.errorCode);
-          }
+          alert(err.response.data.message);
         }
       });
   }
@@ -188,7 +179,7 @@ export default class Category extends Component {
     this.setState({
       isDelete: !this.state.isDelete,
     });
-  }
+  };
 
   addItem = (e) => {
     e.preventDefault();
@@ -196,27 +187,25 @@ export default class Category extends Component {
       "Content-Type": "application/json",
       Authorization: localStorage.getItem("auth"),
     };
-    var category = {
-      categoryName: this.state.categoryName,
+    var author = {
+      authorName: this.state.authorName,
     };
     axios
-      .post(`http://localhost:9999/BookStore/admin/add-category`, category, {
+      .post(`http://localhost:9999/BookStore/admin/add-author`, author, {
         headers,
       })
       .then((response) => {
         if (response.status === 200) {
           alert(response.data.successCode);
           this.loadData();
-          this.setState({ 
+          this.setState({
             isSearch: false,
-        });
+          });
         }
       })
       .catch((err) => {
         if (err.response) {
-          if (err.response.data.message ==='CATEGORY_ALREADY_EXISTED !') {
-            alert("Category is already existed !!");
-          }
+          alert(err.response.data.message);
         }
       });
   };
@@ -229,17 +218,14 @@ export default class Category extends Component {
     };
 
     axios
-      .get(
-        `http://localhost:9999/BookStore/home/get-category-by-id/${cateID}`,
-        {
-          headers,
-        }
-      )
+      .get(`http://localhost:9999/BookStore/home/author/${cateID}`, {
+        headers,
+      })
       .then((response) => {
         if (response.status === 200) {
           this.setState({
-            categoryID: response.data.data.categoryID,
-            categoryName: response.data.data.categoryName,
+            authorID: response.data.data.authorID,
+            authorName: response.data.data.authorName,
             isDelete: response.data.data.delete,
             action: "UPDATE ITEM",
           });
@@ -247,9 +233,7 @@ export default class Category extends Component {
       })
       .catch((err) => {
         if (err.response) {
-          if (err.response.data.errorCode !== null) {
-            alert(err.response.data.errorCode);
-          }
+          alert(err.response.data.message);
         }
       });
   };
@@ -261,13 +245,13 @@ export default class Category extends Component {
       Authorization: localStorage.getItem("auth"),
     };
     var category = {
-      categoryID: this.state.categoryID,
-      categoryName: this.state.categoryName,
-      delete: this.state.isDelete
+      authorID: this.state.authorID,
+      authorName: this.state.authorName,
+      delete: this.state.isDelete,
     };
     axios
       .put(
-        `http://localhost:9999/BookStore/admin/update-category/${this.state.categoryID}`,
+        `http://localhost:9999/BookStore/admin/update-author/${this.state.authorID}`,
         category,
         {
           headers,
@@ -277,16 +261,14 @@ export default class Category extends Component {
         if (response.status === 200) {
           alert(response.data.successCode);
           this.loadData();
-          this.setState({ 
+          this.setState({
             isSearch: false,
-        });
+          });
         }
       })
       .catch((err) => {
         if (err.response) {
-          if (err.response.data.errorCode !== null) {
-            alert(err.response.data.errorCode);
-          }
+          alert(err.response.data.message);
         }
       });
   };
@@ -299,7 +281,7 @@ export default class Category extends Component {
     };
     axios
       .put(
-        `http://localhost:9999/BookStore/admin/delete-category/${cateID}`,
+        `http://localhost:9999/BookStore/admin/delete-author/${cateID}`,
         null,
         {
           headers,
@@ -309,22 +291,20 @@ export default class Category extends Component {
         if (response.status === 200) {
           alert(response.data.successCode);
           this.loadData();
-          this.setState({ 
+          this.setState({
             isSearch: false,
-        });
+          });
         }
       })
       .catch((err) => {
         if (err.response) {
-          if (err.response.data.errorCode !== null) {
-            alert(err.response.data.errorCode);
-          }
+          alert(err.response.data.message);
         }
       });
   };
 
   render() {
-    const { loading, _categories, pageList, searchPageList } = this.state;
+    const { loading, _author, pageList, searchPageList } = this.state;
 
     if (!loading) {
       return <h1>loading...</h1>;
@@ -335,59 +315,57 @@ export default class Category extends Component {
         <div className="container">
           <div className="row">
             {/* update/add form */}
-          
-            <div className="col-md-3">  
-            <Form>
-              <h1>{this.state.action}</h1>
-              
-              <div className="form-group">
-                <label>Category Name</label>
-                <Input
-                  type="text"
-                  name="categoryName"
-                  className="form-control"
-                  onChange={this.setParams}
-                  value={this.state.categoryName}
-                  validations={[required]}
-                />
-              </div>
-              {this.state.action === "UPDATE ITEM" && (
+
+            <div className="col-md-3">
+              <Form>
+                <h1>{this.state.action}</h1>
+
                 <div className="form-group">
-                  <label>Deleted</label>
-                  <input
-                    type="checkbox"
-                    checked={this.state.isDelete}
-                    onChange={this.onchangeCheckbox}
-                    name="isDelete"
+                  <label>Author Name</label>
+                  <Input
+                    type="text"
+                    name="authorName"
+                    className="form-control"
+                    onChange={this.setParams}
+                    value={this.state.authorName}
+                    validations={[required]}
                   />
                 </div>
-              )}
-              <hr />
-              <div className="form-group">
-                {this.state.action == "ADD ITEM" && (
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={(e) => this.addItem(e)}>
-                    Add
-                  </button>
+                {this.state.action === "UPDATE ITEM" && (
+                  <div className="form-group">
+                    <label>Deleted</label>
+                    <input
+                      type="checkbox"
+                      checked={this.state.isDelete}
+                      onChange={this.onchangeCheckbox}
+                      name="isDelete"
+                    />
+                  </div>
                 )}
-                {this.state.action == "UPDATE ITEM" && (
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={(e) => this.updateItem(e)}>
-                    EDIT
-                  </button>
-                  
-                )}
-              </div>
+                <hr />
+                <div className="form-group">
+                  {this.state.action == "ADD ITEM" && (
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={(e) => this.addItem(e)}>
+                      Add
+                    </button>
+                  )}
+                  {this.state.action == "UPDATE ITEM" && (
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={(e) => this.updateItem(e)}>
+                      EDIT
+                    </button>
+                  )}
+                </div>
               </Form>
             </div>
-            
 
             <div className="col-md-9">
-              <h1>List Category</h1>
+              <h1>List Author</h1>
               {/*  search form */}
               <div class="search-container">
                 <form>
@@ -402,8 +380,10 @@ export default class Category extends Component {
                   <button type="submit" onClick={(e) => this.searchCategory(e)}>
                     <FontAwesomeIcon icon={faSearch} />
                   </button>
-                  <button type="submit" onClick={this.setState.action = "ADD ITEM"}  >
-                    <a>Add Category </a>
+                  <button
+                    type="submit"
+                    onClick={(this.setState.action = "ADD ITEM")}>
+                    <a>Add Publisher </a>
                   </button>
                 </form>
               </div>
@@ -419,27 +399,31 @@ export default class Category extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {_categories.map((category) => (
-                    <tr key={category.categoryID}>
-                      <td>{category.categoryID}</td>
-                      <td>{category.categoryName}</td>
-                      <td>{category.createDate}</td>
-                      <td>{category.updateDate}</td>
-                      <td>{category.delete ? "true" : "false"}</td>
+                  {_author.map((author) => (
+                    <tr key={author.authorID}>
+                      <td>{author.authorID}</td>
+                      <td>{author.authorName}</td>
+                      <td>{author.createDate}</td>
+                      <td>{author.updateDate}</td>
+                      <td>{author.delete ? "true" : "false"}</td>
                       <td>
                         <button
                           style={{ color: "blue" }}
                           onClick={(e) =>
-                            this.getUpdateCategory(e, category.categoryID)
+                            this.getUpdateCategory(e, author.authorID)
                           }>
                           <FontAwesomeIcon icon={faEdit} />
-                          
                         </button>
                         <button
                           style={{ color: "red" }}
-                          onClick={(e) =>{
-                            if (window.confirm('Are you sure you wish to delete this item?')) this.deleteItem(e, category.categoryID)} 
-                          }>
+                          onClick={(e) => {
+                            if (
+                              window.confirm(
+                                "Are you sure you wish to delete this item?"
+                              )
+                            )
+                              this.deleteItem(e, author.authorID);
+                          }}>
                           <FontAwesomeIcon icon={faTrash} />
                         </button>
                       </td>
