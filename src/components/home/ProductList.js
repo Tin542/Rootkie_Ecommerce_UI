@@ -346,7 +346,6 @@ export default class ProductList extends Component {
                   <tr>
                     <th>image</th>
                     <th>Name</th>
-                    <th>Descripton</th>
                     <th>Price</th>
                     <th>rate</th>
                     <th>Cart</th>
@@ -365,7 +364,6 @@ export default class ProductList extends Component {
                         </div>
                       </td>
                       <td>{item.book_name}</td>
-                      <td>{item.bookDescription}</td>
                       <td>{item.bookPrice} VND</td>
                       <td>
                         <Rating

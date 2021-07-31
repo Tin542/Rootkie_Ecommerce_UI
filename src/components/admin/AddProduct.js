@@ -56,6 +56,8 @@ export default class AddProduct extends Component {
 
     this.state = {
       listCategory: [],
+      listPublisher:[],
+      listAuthor: [],
 
       book_name: "",
       bookDescription: "",
@@ -65,12 +67,66 @@ export default class AddProduct extends Component {
       categoryName: "",
       publisher: "",
       publish_year: 0,
-      author: "",
+      author: [],
     };
   }
 
   componentDidMount() {
     this.loadCategory();
+    this.loadPublisher();
+    this.loadAuthor();
+  }
+
+  loadAuthor() {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("auth"),
+    };
+    axios
+      .get(`http://localhost:9999/BookStore/home/author`, {
+        headers,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          this.setState({
+            loading: true,
+            listAuthor: response.data.data,
+          });
+        }
+      })
+      .catch((err) => {
+        if (err.response) {
+          if (err.response.data.message !== null) {
+            alert(err.response.data.message);
+          }
+        }
+      });
+  }
+
+  loadPublisher() {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("auth"),
+    };
+    axios
+      .get(`http://localhost:9999/BookStore/home/publisher`, {
+        headers,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          this.setState({
+            loading: true,
+            listPublisher: response.data.data,
+          });
+        }
+      })
+      .catch((err) => {
+        if (err.response) {
+          if (err.response.data.message !== null) {
+            alert(err.response.data.message);
+          }
+        }
+      });
   }
 
   loadCategory() {
@@ -92,8 +148,8 @@ export default class AddProduct extends Component {
       })
       .catch((err) => {
         if (err.response) {
-          if (err.response.data.errorCode !== null) {
-            alert(err.response.data.errorCode);
+          if (err.response.data.message !== null) {
+            alert(err.response.data.message);
           }
         }
       });
@@ -112,6 +168,18 @@ export default class AddProduct extends Component {
     });
   }
 
+  onchangePublisher = (e) => {
+    this.setState({
+      publisher: e.target.value,
+    })
+  }
+
+  onchangeAuthor = (e) => {
+    this.setState({
+      author: e.target.value,
+    })
+  }
+
   addBook = (e) => {
     e.preventDefault();
     const headers = {
@@ -122,9 +190,9 @@ export default class AddProduct extends Component {
       book_name: this.state.book_name,
       bookDescription: this.state.bookDescription,
       bookPrice: this.state.bookPrice,
-      categoryName: this.state.categoryName,
-      author: this.state.author,
-      publisher: this.state.publisher,
+      categoryName:this.state.categoryName,
+      authorName: [this.state.author],
+      publisherName: this.state.publisher,
       publish_year: this.state.publish_year,
       image: this.state.image,
       quantity: this.state.quantity,
@@ -198,36 +266,6 @@ export default class AddProduct extends Component {
             <div class="control-group">
               <Input
                 type="text"
-                placeholder="Enter Author"
-                name="author"
-                class="login-field"
-                id="book-author"
-                value={this.state.author}
-                onChange={this.setParams}
-                validations={[required, short]}
-              />
-            </div>
-            <label class="login-field-icon fui-user" for="book-author"></label>
-
-            <div class="control-group">
-              <Input
-                type="text"
-                placeholder="Enter Publisher"
-                name="publisher"
-                class="login-field"
-                id="book-publisher"
-                value={this.state.publisher}
-                onChange={this.setParams}
-                validations={[required, short]}
-              />
-            </div>
-            <label
-              class="login-field-icon fui-user"
-              for="book-publisher"></label>
-
-            <div class="control-group">
-              <Input
-                type="text"
                 placeholder="Enter Publish Year"
                 name="publish_year"
                 class="login-field"
@@ -285,6 +323,37 @@ export default class AddProduct extends Component {
               {this.state.listCategory.map((item) => (
                 <option key={item.categoryID} value={item.categoryName}>
                   {item.categoryName}
+                </option>
+              ))}
+            </select>
+
+            <select
+              name="subject"
+              id="subject_input"
+              value={this.state.publisher}
+              name="publisher"
+              onChange={this.onchangePublisher}>
+              <option hidden selected>
+                Publisher
+              </option>
+              {this.state.listPublisher.map((item) => (
+                <option key={item.publisherID} value={item.publisherName}>
+                  {item.publisherName}
+                </option>
+              ))}
+            </select>
+            <select
+              name="subject"
+              id="subject_input"
+              value={this.state.author}
+              name="author"
+              onChange={this.onchangeAuthor}>
+              <option hidden selected>
+                Author
+              </option>
+              {this.state.listAuthor.map((item) => (
+                <option key={item.authorID} value={item.authorName}>
+                  {item.authorName}
                 </option>
               ))}
             </select>

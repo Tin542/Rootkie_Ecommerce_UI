@@ -29,7 +29,6 @@ const short = (value) => {
   }
 };
 
-
 export default class ProductList extends Component {
   constructor(props) {
     super(props);
@@ -43,6 +42,8 @@ export default class ProductList extends Component {
       isSearch: false,
 
       _categories: [],
+      _publisher: [],
+      _author: [],
 
       searchByCateValue: "",
       category_ID: "",
@@ -54,14 +55,13 @@ export default class ProductList extends Component {
       bookID: 0,
       book_name: "",
       bookDescription: "",
-      bookPrice: "",
+      bookPrice: 0,
+      image: "",
+      quantity: 0,
       categoryName: "",
-      author: "",
       publisher: "",
       publish_year: 0,
-      isDelete: false,
-      quantity: 0,
-      image: "",
+      author: [],
 
       modalIsOpen: false,
     };
@@ -70,11 +70,64 @@ export default class ProductList extends Component {
   componentDidMount() {
     this.getData();
     this.getCategory();
+    this.loadAuthor();
+    this.loadPublisher();
   }
   componentWillMount() {
     Modal.setAppElement("body");
   }
 
+  loadAuthor() {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("auth"),
+    };
+    axios
+      .get(`http://localhost:9999/BookStore/home/author`, {
+        headers,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          this.setState({
+            loading: true,
+            _author: response.data.data,
+          });
+        }
+      })
+      .catch((err) => {
+        if (err.response) {
+          if (err.response.data.message !== null) {
+            alert(err.response.data.message);
+          }
+        }
+      });
+  }
+
+  loadPublisher() {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("auth"),
+    };
+    axios
+      .get(`http://localhost:9999/BookStore/home/publisher`, {
+        headers,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          this.setState({
+            loading: true,
+            _publisher: response.data.data,
+          });
+        }
+      })
+      .catch((err) => {
+        if (err.response) {
+          if (err.response.data.message !== null) {
+            alert(err.response.data.message);
+          }
+        }
+      });
+  }
   getCategory() {
     const headers = {
       "Content-Type": "application/json",
@@ -357,12 +410,11 @@ export default class ProductList extends Component {
       bookDescription: this.state.bookDescription,
       bookPrice: this.state.bookPrice,
       categoryName: this.state.categoryName,
-      author: this.state.author,
-      publisher: this.state.publisher,
+      authorName: [this.state.author],
+      publisherName: this.state.publisher,
       publish_year: this.state.publish_year,
       image: this.state.image,
       quantity: this.state.quantity,
-      delete: this.state.isDelete,
     };
     console.log(books);
     axios
@@ -412,8 +464,8 @@ export default class ProductList extends Component {
             bookDescription: response.data.data.bookDescription,
             bookPrice: response.data.data.bookPrice,
             categoryName: response.data.data.categoryName,
-            author: response.data.data.author,
-            publisher: response.data.data.publisher,
+            author: response.data.data.authorName,
+            publisher: response.data.data.publisherName,
             publish_year: response.data.data.publish_year,
             isDelete: response.data.data.delete,
             quantity: response.data.data.quantity,
@@ -505,7 +557,7 @@ export default class ProductList extends Component {
             </Link>
           </div>
 
-         {/*  List Product */}
+          {/*  List Product */}
           <div className="container">
             <div className="row">
               <div className="col-md-8">
@@ -544,8 +596,8 @@ export default class ProductList extends Component {
                         <td>{item.bookPrice} VND</td>
                         <td>{item.rate}</td>
                         <td>{item.categoryName}</td>
-                        <td>{item.author}</td>
-                        <td>{item.publisher}</td>
+                        <td>{item.authorName}</td>
+                        <td>{item.publisherName}</td>
                         <td>{item.publish_year}</td>
                         <td>{item.createDate}</td>
                         <td>{item.updateDate}</td>
@@ -558,7 +610,14 @@ export default class ProductList extends Component {
                           </button>
                           <button
                             style={{ color: "red" }}
-                            onClick={(e) => {if (window.confirm('Are you sure you wish to delete this item?')) this.deleteItem(e, item.id)}} >
+                            onClick={(e) => {
+                              if (
+                                window.confirm(
+                                  "Are you sure you wish to delete this item?"
+                                )
+                              )
+                                this.deleteItem(e, item.id);
+                            }}>
                             <FontAwesomeIcon icon={faTrash} />
                           </button>
                         </td>
@@ -594,7 +653,7 @@ export default class ProductList extends Component {
               </div>
             </div>
           </div>
-          
+
           {/* Update form */}
           <Modal
             isOpen={this.state.modalIsOpen}
@@ -657,38 +716,6 @@ export default class ProductList extends Component {
                   <div class="control-group">
                     <Input
                       type="text"
-                      placeholder="Enter Author"
-                      name="author"
-                      class="login-field"
-                      id="book-author"
-                      value={this.state.author}
-                      onChange={this.setParams}
-                      validations={[required, short]}
-                    />
-                  </div>
-                  <label
-                    class="login-field-icon fui-user"
-                    for="book-author"></label>
-
-                  <div class="control-group">
-                    <Input
-                      type="text"
-                      placeholder="Enter Publisher"
-                      name="publisher"
-                      class="login-field"
-                      id="book-publisher"
-                      value={this.state.publisher}
-                      onChange={this.setParams}
-                      validations={[required, short]}
-                    />
-                  </div>
-                  <label
-                    class="login-field-icon fui-user"
-                    for="book-publisher"></label>
-
-                  <div class="control-group">
-                    <Input
-                      type="text"
                       placeholder="Enter Publish Year"
                       name="publish_year"
                       class="login-field"
@@ -730,22 +757,58 @@ export default class ProductList extends Component {
                       validations={[required, short]}
                     />
                   </div>
-
+                  <label class="login-field-icon fui-user" for="cate">
+                    Category
+                  </label>
                   <select
                     name="categoryName"
-                    id="subject_input"
+                    id="cate"
                     value={this.state.categoryName}
-                    name="categoryName"
-                    onChange={this.onChangeCategoryName}>
+                    onChange={this.setParams}>
                     {this.state._categories.map((item) => (
                       <option key={item.categoryID} value={item.categoryName}>
                         {item.categoryName}
                       </option>
                     ))}
                   </select>
-                  <label
-                    class="login-field-icon fui-user"
-                    for="book-img"></label>
+
+                  <label class="login-field-icon fui-user" for="pub">
+                    Publisher
+                  </label>
+                  <select
+                    name="subject"
+                    id="pub"
+                    value={this.state.publisher}
+                    name="publisher"
+                    onChange={this.setParams}>
+                    <option hidden selected>
+                      Publisher
+                    </option>
+                    {this.state._publisher.map((item) => (
+                      <option key={item.publisherID} value={item.publisherName}>
+                        {item.publisherName}
+                      </option>
+                    ))}
+                  </select>
+
+                  <label class="login-field-icon fui-user" for="au">
+                    Author
+                  </label>
+                  <select
+                    name="subject"
+                    id="au"
+                    value={this.state.author}
+                    name="author"
+                    onChange={this.setParams}>
+                    <option hidden selected>
+                      Author
+                    </option>
+                    {this.state._author.map((item) => (
+                      <option key={item.authorID} value={item.authorName}>
+                        {item.authorName}
+                      </option>
+                    ))}
+                  </select>
 
                   <div className="form-group">
                     <label>Delete</label>

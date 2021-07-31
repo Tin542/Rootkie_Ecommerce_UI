@@ -383,7 +383,7 @@ export default class Category extends Component {
                   <button
                     type="submit"
                     onClick={(this.setState.action = "ADD ITEM")}>
-                    <a>Add Publisher </a>
+                    <a>Add Author </a>
                   </button>
                 </form>
               </div>
