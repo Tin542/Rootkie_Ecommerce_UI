@@ -360,7 +360,9 @@ export default class Category extends Component {
                   <button
                     type="button"
                     className="btn btn-primary"
-                    onClick={(e) => this.updateItem(e)}>
+                    onClick={(e) => {
+                      if (window.confirm('Are you sure you wish to update this item?')) this.updateItem(e)
+                    }}>
                     EDIT
                   </button>
                   

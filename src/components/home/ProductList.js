@@ -209,7 +209,7 @@ export default class ProductList extends Component {
     console.log(cateID);
     axios
       .get(
-        `http://localhost:9999/BookStore/home/search-book?keyword=${cateID}`,
+        `http://localhost:9999/BookStore/home/search-book-by-cate?id=${cateID}`,
         {
           headers,
         }
@@ -254,7 +254,7 @@ export default class ProductList extends Component {
     console.log(page);
     axios
       .get(
-        `http://localhost:9999/BookStore/home/search-book?keyword=${this.state.category_ID}&page=${page}`,
+        `http://localhost:9999/BookStore/home/search-book-by-cate?id=${this.state.category_ID}&page=${page}`,
         {
           headers,
         }

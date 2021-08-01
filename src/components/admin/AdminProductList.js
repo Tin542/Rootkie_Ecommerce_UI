@@ -241,6 +241,7 @@ export default class ProductList extends Component {
             loading: true,
             isSearch: true,
             isSearchByCate: false,
+            searchByCateValue:"",
             _products: response.data.data.Books,
           });
           this.showSearchPageList(response.data);
@@ -259,7 +260,7 @@ export default class ProductList extends Component {
     for (let i = 0; i < response.data.totalPages; i++) {
       list.push(i);
     }
-    if (list.length > 1) {
+    if (list.length > 0) {
       this.setState({ searchPageList: list });
       console.log("list search page: " + list);
     }
@@ -302,7 +303,7 @@ export default class ProductList extends Component {
     console.log(cateID);
     axios
       .get(
-        `http://localhost:9999/BookStore/admin/search-book?keyword=${cateID}`,
+        `http://localhost:9999/BookStore/admin/search-book-by-cate?id=${cateID}`,
         {
           headers,
         }
@@ -313,6 +314,7 @@ export default class ProductList extends Component {
             loading: true,
             isSearchByCate: true,
             isSearch: false,
+            searchValue:"",
             _products: response.data.data.Books,
           });
           this.showSearchCatePageList(response.data);
@@ -345,7 +347,7 @@ export default class ProductList extends Component {
     console.log(page);
     axios
       .get(
-        `http://localhost:9999/BookStore/admin/search-book?keyword=${this.state.category_ID}&page=${page}`,
+        `http://localhost:9999/BookStore/admin/search-book-by-cate?id=${this.state.category_ID}&page=${page}`,
         {
           headers,
         }
@@ -410,7 +412,7 @@ export default class ProductList extends Component {
       bookDescription: this.state.bookDescription,
       bookPrice: this.state.bookPrice,
       categoryName: this.state.categoryName,
-      authorName: [this.state.author],
+      authorName: this.state.author,
       publisherName: this.state.publisher,
       publish_year: this.state.publish_year,
       image: this.state.image,
@@ -822,7 +824,9 @@ export default class ProductList extends Component {
                   <hr />
                   <Input
                     class="btn btn-primary"
-                    onClick={(e) => this.updateItem(e, this.state.bookID)}
+                    onClick={(e) => {
+                      if (window.confirm('Are you sure you wish to update this item?')) this.updateItem(e, this.state.bookID)
+                    }}
                     type="submit"
                     value="Update Book"
                   />
